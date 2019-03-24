@@ -157,7 +157,7 @@ class UserController extends Controller
                 'code' => 200,
                 'status' => 'success',
                 'user' => $user,
-                'chenges' => $params_array
+                'changes' => $params_array
             );
 
 
@@ -171,6 +171,17 @@ class UserController extends Controller
         }
         return response()->json($data, $data['code']);
 
+    }
+
+
+    public function upload(Request $request){
+        $data = array(
+            'code' => 400,
+            'status' => 'error',
+            'message' => 'El usuario no esta identificado'
+        );
+
+        return response()->json($data, $data['code']);
     }
 
 
