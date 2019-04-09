@@ -185,7 +185,16 @@ class UserController extends Controller
         ]);
         
         // Guardar imagen
-        if ($image) {
+        if (!$image || $validate->fails()) {
+
+            $data = array(
+                'code' => 400,
+                'status' => 'error',
+                'message' => 'Error al subir imagen'
+            );
+
+        }else {
+
             $image_name = time().$image->getClientOriginalName();
             \Storage::disk('users')->put($image_name, \File::get($image));
 
@@ -195,13 +204,7 @@ class UserController extends Controller
                 'image' => $image_name,
                 'message' => 'Imagen subida correctamente'
             );
-        }else {
-            
-            $data = array(
-                'code' => 400,
-                'status' => 'error',
-                'message' => 'Error al subir imagen'
-            );
+   
         }
 
         return response()->json($data, $data['code']);
