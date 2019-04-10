@@ -47,3 +47,6 @@ Route::get('/api/user/detail/{id}', 'UserController@detail');
 
 //rutas del controlador de categoria
 Route::resource('/api/category', 'CategoryController');
+
+//Rutas del controlador de entradas (post)
+Route::resource('/api/post', 'PostController');
