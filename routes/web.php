@@ -15,6 +15,7 @@
 use \App\Http\Middleware\ApiAuthMiddleware;
 
 //RUTAS DE PRUEBA
+/*
 Route::get('/', function () {
     return view('welcome');
 });
@@ -26,6 +27,7 @@ Route::get('/pruebas/{nombre?}', function($nombre=null){
         'texto' => $texto
     ));
 });
+*/
 
 Route::get('/animales', 'PruebasController@animales');
 Route::get('/testorm', 'PruebasController@testOrm');
@@ -42,3 +44,6 @@ Route::put('/api/user/update', 'UserController@update');
 Route::post('/api/user/upload', 'UserController@upload')->middleware(ApiAuthMiddleware::class);
 Route::get('/api/user/avatar/{filename}', 'UserController@getImage');
 Route::get('/api/user/detail/{id}', 'UserController@detail');
+
+//rutas del controlador de categoria
+Route::resource('/api/category', 'CategoryController');
