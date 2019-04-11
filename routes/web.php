@@ -29,9 +29,6 @@ Route::get('/pruebas/{nombre?}', function($nombre=null){
 });
 */
 
-Route::get('/animales', 'PruebasController@animales');
-Route::get('/testorm', 'PruebasController@testOrm');
-
 //RUTAS DEL API
 Route::get('/usuario/pruebas', 'UserController@pruebas');
 Route::get('/categoria/pruebas', 'CategoryController@pruebas');
@@ -51,3 +48,6 @@ Route::resource('/api/category', 'CategoryController');
 //Rutas del controlador de entradas (post)
 Route::resource('/api/post', 'PostController');
 Route::post('/api/post/upload', 'PostController@upload');
+Route::get('/api/post/image/{filename}', 'PostController@getImage');
+Route::get('/api/post/category/{id}', 'PostController@getPostsByCategory');
+Route::get('/api/post/user/{id}', 'PostController@getPostsByUser');

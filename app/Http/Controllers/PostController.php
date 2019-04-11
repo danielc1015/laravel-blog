@@ -10,7 +10,13 @@ use App\Helpers\JwtAuth;
 class PostController extends Controller
 {
     public function __construct(){
-        $this->middleware('api.auth', ['except' => ['index', 'show']]);
+        $this->middleware('api.auth', ['except' => [
+            'index', 
+            'show', 
+            'getImage', 
+            'getPostsByCategory',
+            'getPostsByUser'
+            ]]);
     }
 
     public function index(){
@@ -238,6 +244,50 @@ class PostController extends Controller
         }  
 
         //devolver datos
+        return response()->json($data, $data['code']);
+    }
+
+
+    public function getImage($filename)
+    {
+        // comprobar si existe
+        $isset = \Storage::disk('images')->exists($filename);
+        if ($isset) {
+            //conseguir la imagen
+            $file = \Storage::disk('images')->get($filename);
+            //devolver resultado
+            return response($file, 200);
+        }else {
+            $data = array(
+                'code' => 404,
+                'status' => 'error',
+                'message' => 'La imagen no existe'
+            );
+            return response()->json($data, $data['code']);
+        }
+        
+    }
+
+    public function getPostsByCategory($id)
+    {
+        $posts = Post::where('category_id', $id)->get();
+        $data = array(
+            'code' => 200,
+            'status' => 'success',
+            'posts' => $posts
+        );
+        return response()->json($data, $data['code']);
+    }
+
+
+    public function getPostsByUser($id)
+    {
+        $posts = Post::where('user_id', $id)->get();
+        $data = array(
+            'code' => 200,
+            'status' => 'success',
+            'posts' => $posts
+        );
         return response()->json($data, $data['code']);
     }
 
