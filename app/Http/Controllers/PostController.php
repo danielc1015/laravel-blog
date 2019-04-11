@@ -63,7 +63,8 @@ class PostController extends Controller
             $validate = \Validator::make($params_array, [
                 'title' => 'required',
                 'content' => 'required',
-                'category_id' => 'required'
+                'category_id' => 'required',
+                'image' => 'required'
             ]);
 
             if ($validate->fails()) {
@@ -98,6 +99,84 @@ class PostController extends Controller
             );
         }
         //devolver la respuesta
+        return response()->json($data, $data['code']);
+    }
+
+
+    public function update($id, Request $request){
+        // recoger datos por put
+        $json = $request->input('json', null);
+        $params_array = json_decode($json, true);
+
+        if (!empty($params_array)) {
+            //validar los datos
+            $validate = \Validator::make($params_array, [
+                'title' => 'required',
+                'content' => 'required',
+                'category_id' => 'required'
+            ]);
+
+            if ($validate->fails()) {
+                $data = array(
+                    'code' => 400,
+                    'status' => 'error',
+                    'message' => $validate->errors(),
+
+                );
+            } else {
+                //eliminar lo que no queremos actualizar
+                unset($params_array['id']);
+                unset($params_array['user_id']);
+                unset($params_array['created_at']);
+                unset($params_array['user']);
+
+                //actualiar el registro
+                $post = Post::where('id', $id)->updateOrCreate($params_array);
+                
+                $data = array(
+                    'code' => 200,
+                    'status' => 'success',
+                    'post' => $post,
+                    'postchanges' => $params_array
+                );
+            }
+            
+
+        } else {
+            $data = array(
+                'code' => 400,
+                'status' => 'error',
+                'message' => 'Envia los datos correctamente'
+            );
+        }
+
+        //devolver respuesta
+        return response()->json($data, $data['code']);
+    }
+
+
+    public function destroy($id, Request $request){
+        //conseguir el post
+        $post = Post::find($id);
+
+        if (!empty($post)) {
+            //borrarlo
+            $post->delete();
+
+            //devolver algo
+            $data = array(
+                'code' => 200,
+                'status' => 'success',
+                'post' => $post
+            );
+        }else {
+            $data = array(
+                'code' => 404,
+                'status' => 'error',
+                'message' => 'El post no existe'
+            );
+        }
+
         return response()->json($data, $data['code']);
     }
 
