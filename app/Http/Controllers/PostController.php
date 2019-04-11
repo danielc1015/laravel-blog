@@ -199,12 +199,46 @@ class PostController extends Controller
         return response()->json($data, $data['code']);
     }
 
+
     private function getIdentity(Request $request){
         //conseguir usuario identificado
         $jwtAuth = new JwtAuth();
         $token = $request->header('Authorization', null);
         $user = $jwtAuth->checkToken($token, true);
         return $user;
+    }
+
+
+    public function upload(Request $request)
+    {
+        //recoger la imagen de la peticion
+        $image = $request->file('file0');
+
+        //validar la imagen
+        $validate = \Validator::make($request->all(), [
+            'file0' => 'required|image|mimes::jpg,jpeg,png,gif'
+        ]);
+
+        if (!$image || $validate->fails()) {
+            $data = array(
+                'code' => 400,
+                'status' => 'error',
+                'message' => 'Error al subir imagen'
+            );
+        } else {
+            //guardar la imagen en un disco
+            $image_name = time() . $image->getClientOriginalName();
+            \Storage::disk('images')->put($image_name, \File::get($image));
+
+            $data = array(
+                'code' => 200,
+                'status' => 'success',
+                'imagen' => $image_name
+            );
+        }  
+
+        //devolver datos
+        return response()->json($data, $data['code']);
     }
 
 
