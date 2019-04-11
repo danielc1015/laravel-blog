@@ -135,16 +135,25 @@ class PostController extends Controller
                 $where = [
                     'id'=> $id,
                     'user_id'=> $user->sub,
-
                 ];
-                $post = Post::updateOrCreate($where, $params_array);
+
+                try {
+                    $post = Post::updateOrCreate($where, $params_array);
+                    $data = array(
+                        'code' => 200,
+                        'status' => 'success',
+                        'post' => $post,
+                        'postchanges' => $params_array
+                    );
+                } catch (\Throwable $th) {
+                    $data = array(
+                        'code' => 400,
+                        'status' => 'error',
+                        'message' => 'No se ha podido actualizar el Post'
+                    );
+                }
                 
-                $data = array(
-                    'code' => 200,
-                    'status' => 'success',
-                    'post' => $post,
-                    'postchanges' => $params_array
-                );
+                
             }
             
 
