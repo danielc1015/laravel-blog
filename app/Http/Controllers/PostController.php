@@ -139,6 +139,7 @@ class PostController extends Controller
 
                 try {
                     $post = Post::updateOrCreate($where, $params_array);
+
                     $data = array(
                         'code' => 200,
                         'status' => 'success',
@@ -147,9 +148,9 @@ class PostController extends Controller
                     );
                 } catch (\Throwable $th) {
                     $data = array(
-                        'code' => 400,
+                        'code' => 404,
                         'status' => 'error',
-                        'message' => 'No se ha podido actualizar el Post'
+                        'message' => 'No se ha podido actualizar el Post. Post no encontrado'
                     );
                 }
                 
